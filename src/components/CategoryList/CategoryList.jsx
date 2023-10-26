@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import './CategoryList.css';
 
 export default function CategoryList({ categories, activeCat, setActiveCat }) {

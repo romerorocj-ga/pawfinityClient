@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import './AuthPage.css';
 import LoginForm from '../../components/LoginForm/LoginForm';

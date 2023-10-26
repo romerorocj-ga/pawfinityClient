@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
 import './UserLogOut.css';
-import { logOut } from '../../utilities/users-service';
+import { logOut } from '../../utilities/user-services';
 
 export default function UserLogOut({ user, setUser }) {
   function handleLogOut() {

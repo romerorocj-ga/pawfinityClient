@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import './PetListItem.css';
 
 export default function PetListItem({ petItem, handleAddToOrder }) {

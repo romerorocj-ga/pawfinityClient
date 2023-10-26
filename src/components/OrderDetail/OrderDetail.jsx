@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import './OrderDetail.css';
 import LineItem from '../LineItem/LineItem';
 
