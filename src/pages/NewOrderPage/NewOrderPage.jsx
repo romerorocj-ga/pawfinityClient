@@ -8,36 +8,26 @@ import PetList from '../../components/PetList/PetList';
 import CategoryList from '../../components/CategoryList/CategoryList';
 import OrderDetail from '../../components/OrderDetail/OrderDetail';
 import UserLogOut from '../../components/UserLogOut/UserLogOut';
+import sendRequest   from '../../utilities/send-request';
 
 export default function NewOrderPage({ user, setUser }) {
   const [petItems, setPetItems] = useState([]);
-  const [activeCat, setActiveCat] = useState('');
-  const [cart, setCart] = useState(null);
-  const categoriesRef = useRef([]);
-  const navigate = useNavigate();
-  useEffect(function () {
-    async function getItems() {
-      console.log('Fetching items...');
-      const items = await itemsAPI.getAll();
-      console.log('Items received:', items);
-      categoriesRef.current = [
-        ...new Set(items.map((item) => item.category.name)),
-      ];
-      setPetItems(items);
-      setActiveCat(categoriesRef.current[0]);
+  const [activeCat, setActiveCat] = useState('')
+  const [cart , setCart] = useState(null)
+  const categoriesRef = useRef([])
+  const navigate = useNavigate() 
+ 
+  useEffect(function() {
+    async function getPetItems() {
+      const petItems = await sendRequest('/items')
+        setPetItems(petItems.results)
     }
-    getItems();
-
-    async function getCart() {
-      const cart = await ordersAPI.getCart();
-      setCart(cart);
-    }
-    getCart();
-  }, []);
+    getPetItems()
+  }, [])
 
   async function handleAddToOrder(itemId) {
-    const updatedCart = await ordersAPI.addItemToCart(itemId);
-    setCart(updatedCart);
+    const updatedCart = await ordersAPI.addItemToCart(itemId)
+    setCart(updatedCart)
   }
 
   async function handleChangeQty(itemId, newQty) {
@@ -50,9 +40,6 @@ export default function NewOrderPage({ user, setUser }) {
     navigate('/orders');
   }
 
-  console.log('petItems:', petItems);
-  console.log('activeCat:', activeCat);
-  console.log('cart:', cart);
   return (
     <main className="NewOrderPage">
       <aside>
@@ -68,7 +55,7 @@ export default function NewOrderPage({ user, setUser }) {
         <UserLogOut user={user} setUser={setUser} />
       </aside>
       <PetList
-        petItems={petItems.filter((item) => item.category.name === activeCat)}
+        petItems={petItems.filter(item => item.category.name === activeCat)}
         handleAddToOrder={handleAddToOrder}
       />
       <OrderDetail
