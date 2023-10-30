@@ -1,49 +1,57 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as ordersAPI from '../../utilities/orders-api';
 import './OrderHistoryPage.css';
-import OrderDetail from '../../components/OrderDetail/OrderDetail';
+import Logo from '../../components/Logo/Logo';
+import { Link, useNavigate,} from 'react-router-dom';
+import OrderDetail from '../../components/OrderDetail/OrderDetail'; 
+import OrderList from '../../components/OrderList/OrderList'; 
+import UserLogOut from '../../components/UserLogOut/UserLogOut'; 
 
-export default function OrderHistoryPage() {
+export default function OrderHistoryPage({ user, setUser }) {
   const [orderHistory, setOrderHistory] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  useEffect(() => {
-    async function fetchOrderHistory() {
-      try {
-        const history = await ordersAPI.getOrderHistory();
-        setOrderHistory(history);
-      } catch (error) {
-        console.error('Error fetching order history:', error);
-      }
+  async function fetchOrderHistory() {
+    try {
+      const history = await ordersAPI.getOrderHistory();
+      setOrderHistory(history);
+    } catch (error) {
+      console.error('Error fetching order history:', error);
     }
-
+  }
+  useEffect(() => {
     fetchOrderHistory();
   }, []);
 
   const handleOrderClick = (orderId) => {
-    const selected = orderHistory.find(order => order.orderId === orderId);
+   const selected = orderHistory.find(order => order.orderId === orderId);
     setSelectedOrder(selected);
   };
+
+
+  const onDeleteOrder = async (e, orderId) => {
+     try {
+      await ordersAPI.deleteOrder(orderId);
+      fetchOrderHistory()
+      const updatedOrderHistory = orderHistory.filter(order => order.orderId !== orderId);
+      setOrderHistory(updatedOrderHistory);
+      setSelectedOrder(null);
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+  };
+
 
   return (
     <main className="OrderHistoryPage">
       <aside>
-      <div>
-        <h1>Order History</h1>
-        <ul>
-          {orderHistory.map(order => (
-            <li key={order._id} onClick={() => handleOrderClick(order.orderId)}>
-              <p>Order ID: {order.orderId}</p>
-              <p>Total Qty: {order.totalQty}</p>
-              <p>Total Price: ${order.orderTotal.toFixed(2)}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        {selectedOrder && <OrderDetail order={selectedOrder} />}
-      </div>
+        <Logo />
+        <Link to="/orders/new" className="button btn-sm">NEW ORDER</Link>
+        <UserLogOut user={user} setUser={setUser} />
+        
       </aside>
+        <OrderList orderHistory={orderHistory} onOrderClick={handleOrderClick} onDeleteOrder={onDeleteOrder} />
+      {selectedOrder && <OrderDetail order={selectedOrder} />}
     </main>
   );
 }
+

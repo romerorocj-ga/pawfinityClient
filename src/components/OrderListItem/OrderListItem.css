@@ -1,0 +1,30 @@
+.OrderListItem {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3vmin;
+    padding: 2vmin;
+    color: var(--text-light);
+    background-color: var(--white);
+    border: 0.1vmin solid var(--tan-3);
+    border-radius: 1vmin;
+    font-size: 4vmin;
+    cursor: pointer;
+  }
+  
+  .OrderListItem .order-id {
+    font-size: 2.5vmin;
+    font-weight: bold;
+  }
+  
+  .OrderListItem .order-details {
+    font-size: 2vmin;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .OrderListItem .order-details div {
+    margin-bottom: 1vmin;
+  }
+  

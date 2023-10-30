@@ -48,9 +48,6 @@ export default function NewOrderPage({ user, setUser }) {
     navigate('/orders/history');
   }
   
-  
-  
-
   return (
     <main className="NewOrderPage">
       <aside>
@@ -60,8 +57,8 @@ export default function NewOrderPage({ user, setUser }) {
           activeCat={activeCat}
           setActiveCat={setActiveCat}
         />
-        <Link to="/orderHistory" className="button btn-sm">PREVIOUS ORDERS</Link>
-        <UserLogOut user={user} setUser={setUser} />
+        <Link to="/orders/history" className="button btn-sm">PREVIOUS ORDERS</Link>
+       <UserLogOut user={user} setUser={setUser} />
       </aside>
       <PetList
         petItems={petItems.filter(item => item.category.name === activeCat)}
