@@ -7,10 +7,7 @@ export default function PetListItem({ petItem, handleAddToOrder }) {
       <div className="name">{petItem.name}</div>
       <div className="buy">
         <span>${petItem.price.toFixed(2)}</span>
-        <button
-          className="btn-sm"
-          onClick={() => handleAddToOrder(petItem._id)}
-        >
+        <button className="btn-sm" onClick={() => handleAddToOrder(petItem._id)}>
           ADD
         </button>
       </div>

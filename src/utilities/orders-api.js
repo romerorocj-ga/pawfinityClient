@@ -17,3 +17,11 @@ export function setItemQtyInCart(itemId, newQty) {
 export function checkout() {
   return sendRequest(`${BASE_URL}/cart/checkout`, 'POST');
 }
+
+export function getOrderHistory() {
+  return sendRequest(`${BASE_URL}/history`)
+    .catch(error => {
+      console.error('Error fetching order history:', error);
+      throw error; // Re-throw the error to propagate it to the caller
+    });
+}

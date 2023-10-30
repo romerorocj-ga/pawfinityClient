@@ -1,19 +1,27 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './UserLogOut.css';
-import { logOut } from '../../utilities/user-services';
 
 export default function UserLogOut({ user, setUser }) {
-  function handleLogOut() {
-    logOut();
+  const handleLogOut = () => {
+    // Your logout logic here
     setUser(null);
-  }
+  };
 
   return (
     <div className="UserLogOut">
-      <div>{user.name}</div>
-      <div className="email">{user.email}</div>
-      <button className="btn-sm" onClick={handleLogOut}>
-        LOG OUT
-      </button>
+      {user && (
+        <div className="user-info">
+          <p>Hello, {user.name}</p>
+        </div>
+      )}
+      <div className="logout-button">
+        {user ? (
+          <button onClick={handleLogOut}>LOG OUT</button>
+        ) : (
+          <Link to="/login">LOG IN</Link>
+        )}
+      </div>
     </div>
   );
 }

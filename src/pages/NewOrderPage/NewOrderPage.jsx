@@ -2,32 +2,40 @@ import { useState, useEffect, useRef } from 'react';
 import * as itemsAPI from '../../utilities/items-api';
 import * as ordersAPI from '../../utilities/orders-api';
 import './NewOrderPage.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,} from 'react-router-dom';
 import Logo from '../../components/Logo/Logo';
 import PetList from '../../components/PetList/PetList';
 import CategoryList from '../../components/CategoryList/CategoryList';
 import OrderDetail from '../../components/OrderDetail/OrderDetail';
 import UserLogOut from '../../components/UserLogOut/UserLogOut';
-import sendRequest   from '../../utilities/send-request';
 
 export default function NewOrderPage({ user, setUser }) {
   const [petItems, setPetItems] = useState([]);
-  const [activeCat, setActiveCat] = useState('')
-  const [cart , setCart] = useState(null)
-  const categoriesRef = useRef([])
-  const navigate = useNavigate() 
- 
+  const [activeCat, setActiveCat] = useState('');
+  const [cart, setCart] = useState(null);
+  const categoriesRef = useRef([]);
+  const navigate = useNavigate();
+
   useEffect(function() {
-    async function getPetItems() {
-      const petItems = await sendRequest('/items')
-        setPetItems(petItems.results)
+    async function getItems() {
+      const items = await itemsAPI.getAll();
+      console.log(items)
+      categoriesRef.current = [...new Set(items.map((item) => item.category.name))];
+      setPetItems(items);
+      setActiveCat(categoriesRef.current[0]);
     }
-    getPetItems()
-  }, [])
+    getItems();
+
+    async function getAllCart() {
+      const cart = await ordersAPI.getCart();
+      setCart(cart);
+    }
+    getAllCart();
+  }, []);
 
   async function handleAddToOrder(itemId) {
-    const updatedCart = await ordersAPI.addItemToCart(itemId)
-    setCart(updatedCart)
+    const updatedCart = await ordersAPI.addItemToCart(itemId);
+    setCart(updatedCart);
   }
 
   async function handleChangeQty(itemId, newQty) {
@@ -37,8 +45,11 @@ export default function NewOrderPage({ user, setUser }) {
 
   async function handleCheckout() {
     await ordersAPI.checkout();
-    navigate('/orders');
+    navigate('/orders/history');
   }
+  
+  
+  
 
   return (
     <main className="NewOrderPage">
@@ -49,20 +60,14 @@ export default function NewOrderPage({ user, setUser }) {
           activeCat={activeCat}
           setActiveCat={setActiveCat}
         />
-        <Link to="/orders" className="button btn-sm">
-          PREVIOUS ORDERS
-        </Link>
+        <Link to="/orderHistory" className="button btn-sm">PREVIOUS ORDERS</Link>
         <UserLogOut user={user} setUser={setUser} />
       </aside>
       <PetList
         petItems={petItems.filter(item => item.category.name === activeCat)}
         handleAddToOrder={handleAddToOrder}
       />
-      <OrderDetail
-        order={cart}
-        handleChangeQty={handleChangeQty}
-        handleCheckout={handleCheckout}
-      />
+      <OrderDetail order={cart}handleChangeQty={handleChangeQty}handleCheckout={handleCheckout}/>
     </main>
   );
 }
