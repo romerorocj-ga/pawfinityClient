@@ -4,7 +4,6 @@ import './UserLogOut.css';
 
 export default function UserLogOut({ user, setUser }) {
   const handleLogOut = () => {
-    // Your logout logic here
     setUser(null);
   };
 
